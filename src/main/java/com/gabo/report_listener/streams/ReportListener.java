@@ -1,0 +1,28 @@
+package com.gabo.report_listener.streams;
+
+import java.util.function.Consumer;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.gabo.report_listener.documents.ReportDocument;
+import com.gabo.report_listener.repositories.ReportRepository;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Configuration
+@Slf4j
+@AllArgsConstructor
+public class ReportListener {
+    
+    private final ReportRepository reportRepository;
+
+    @Bean
+    public Consumer<String> consumerReport(){
+        return report -> {
+            this.reportRepository.save(ReportDocument.builder().content(report).build());
+            log.info("Saving report: {}" ,report);
+        };
+    }
+}
